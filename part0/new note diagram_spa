@@ -1,0 +1,11 @@
+sequenceDiagram
+    participant browser
+    participant server
+
+    browser->>server: POST https://studies.cs.helsinki.fi/exampleapp/new_note_spa
+    activate server
+    server-->> browser: new_note_spa
+    deactivate server
+
+The browser adds the "new_note_spa" into the applications/json folder
+allowing it to be seen instantly. 
