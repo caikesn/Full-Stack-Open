@@ -215,11 +215,6 @@ import { useState } from "react"
 //       console.log('value now', newValue)
 //       setValue(newValue)
 //     }
-  
-//   const Button = (props) => (
-//     <button onClick={props.onClick}>
-//       {props.text}
-//     </button>
 //   )
 
 //   return (
