@@ -27,8 +27,8 @@ const App = () => {
     const nameExists = persons.some(person => person.name === newName)
     const numberExists = persons.some(person => person.number === newNumber)
 
-    if (numberExists) {
-      alert(`${newName} is already added to phonebook`)
+    if (nameExists || numberExists) {
+      alert(`${newName} is already added to phonebook / number is already in use`)
     } else {
       const nameObject = {
       name: newName,
