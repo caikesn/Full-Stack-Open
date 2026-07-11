@@ -12,6 +12,12 @@ const Numbers = (props) => {
   )
 }
 
+const Filter = (props) => {
+  return (
+    <div></div>
+  )
+}
+
 
 const App = () => {
   const [persons, setPersons] = useState([
@@ -20,6 +26,11 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('')
   const [newName, setNewName] = useState('')
   const [showAll, setShowAll] = useState(true)
+  const [query, setQuery] = useState('')
+
+  const filteredPersons = persons.filter((person) => 
+    person.name.toLowerCase().includes(query.toLowerCase())
+  )
 
   const addPerson = (event) => {
     event.preventDefault()
@@ -70,6 +81,18 @@ const App = () => {
           {person.name} {person.number}
         </div>
       )}
+      <h2>Search for names</h2>
+      <input 
+        type="text" 
+        placeholder='Type to search...'
+        value={query}
+        onChange={(details) => setQuery(details.target.value)}
+      />
+      <ul>
+        {filteredPersons.map((person) => (
+          <li key={person.id}>{person.name} {person.number}</li> 
+        ))}
+      </ul>
     </div>
   )
 }
