@@ -59,12 +59,18 @@ const App = () => {
       id: String(Math.floor(Math.random() * 10000))
     }
 
-      setPersons(persons.concat(nameObject))
-      setNewName('')
-      setNewNumber('')
+    axios
+      .post('http://localhost:3001/persons', nameObject)
+      .then(response => {
+        setPersons(persons.concat(response.data))
+        setNewName('')
+        setNewNumber('')
+      })
     }
-
+    
   }
+
+
   const handleNameChange = (event) => {
     setNewName(event.target.value)
   }
