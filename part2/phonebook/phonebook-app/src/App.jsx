@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
+import numberService from './services/persons'
 
 
 const Search = (props) => (
@@ -14,10 +15,13 @@ const PersonForm = (props) => (
     </form>
 )
 
-const Persons = ({ persons }) => (
+const Persons = ({ persons, onDelete }) => (
   <div>
     {persons.map(person => (
-      <div key={person.id}>{person.name} {person.number} </div>
+      <div key={person.id}>
+        {person.name} {person.number} 
+        <button onClick={() => onDelete(person.id)}>delete</button>
+      </div>
     ))}
   </div>
 )
@@ -30,12 +34,11 @@ const App = () => {
   const [query, setQuery] = useState('')
 
   useEffect(() => {
-    console.log('effect');
-    axios
-      .get('http://localhost:3001/persons')
-      .then(response => {
+    numberService
+      .getAll()
+      .then(initialPersons => {
         console.log('promise fulfilled')
-        setPersons(response.data)
+        setPersons(initialPersons)
       })
   }, [])
   console.log('render', persons.length, 'persons')
@@ -43,6 +46,22 @@ const App = () => {
   const filteredPersons = persons.filter((person) => 
     person.name.toLowerCase().includes(query.toLowerCase())
   )
+
+  const deletePerson = (id) => {
+    const person = persons.find(p => p.id === id)
+    if (!person) return
+
+    if (window.confirm(`Delete ${person.name}?`))
+    numberService
+      .deletePerson(id)
+      .then(() => {
+        setPersons(persons.filter(p => p.id !== id))
+      })
+      .catch(error => {
+        alert(`'${person.name}' was already deleted from server`)
+        setPersons(persons.filter(p => p.id !== id))
+      })
+  }
 
   const addPerson = (event) => {
     event.preventDefault()
@@ -59,10 +78,10 @@ const App = () => {
       id: String(Math.floor(Math.random() * 10000))
     }
 
-    axios
-      .post('http://localhost:3001/persons', nameObject)
-      .then(response => {
-        setPersons(persons.concat(response.data))
+    numberService
+      .create(nameObject)
+      .then(returnedName => {
+        setPersons(persons.concat(returnedName))
         setNewName('')
         setNewNumber('')
       })
@@ -90,7 +109,10 @@ const App = () => {
           onSubmit={addPerson}
         />
       <h2>Names</h2>
-        <Persons persons={persons} />
+        <Persons 
+          persons={persons}
+          onDelete={deletePerson}
+          />
       <h2>Search for names</h2>
         <Search query={query} onQueryChange={(e) => setQuery(e.target.value)} />
         <ul>
