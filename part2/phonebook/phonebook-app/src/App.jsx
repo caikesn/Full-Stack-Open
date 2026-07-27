@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
 import numberService from './services/persons'
+import Notification from './services/Notification'
 
 
 const Search = (props) => (
@@ -32,6 +33,7 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [showAll, setShowAll] = useState(true)
   const [query, setQuery] = useState('')
+  const [notification, setNotification] = useState(null)
 
   useEffect(() => {
     numberService
@@ -84,8 +86,10 @@ const App = () => {
         setPersons(persons.concat(returnedName))
         setNewName('')
         setNewNumber('')
+        setNotification(`${returnedName.name} was added to phonebook`)
       })
     }
+
     
   }
 
@@ -109,6 +113,7 @@ const App = () => {
           onSubmit={addPerson}
         />
       <h2>Names</h2>
+        <Notification message={notification}/>
         <Persons 
           persons={persons}
           onDelete={deletePerson}
